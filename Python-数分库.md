@@ -2,8 +2,6 @@
 
 set nu: Linux中vim编辑内显示对应的行数
 
-
-
 ## Jupyter
 
 ### 	常用快捷键
@@ -1254,21 +1252,13 @@ array([[ 3.4,  0.4,  2.4, -1.6, -4.6],
 
 
 
-
-
-
-
-
-
-
-
 ## Pandas
 
 ​	主要数据结构为 **Series（一维数据）**，**Data Frame（）二维数据**
 
-​	pandas ：用于小规模数量集的处理
+​	pandas ：	用于小规模数量集的处理
 
-​	spark：	用于大规模数量集的处理
+​	spark：	    用于大规模数量集的处理
 
 
 
@@ -1298,9 +1288,9 @@ array([[ 3.4,  0.4,  2.4, -1.6, -4.6],
 
 ##### **基本属性：**
 
-​		**shape**:	形状/维度
+​		**shape**:     形状/维度
 
-​		**size**:		元素个数
+​		**size**:	元素个数
 
 ​		**index**：  索引
 
@@ -1453,22 +1443,15 @@ E    6
 dtype: int64
   
   
-  
-  
 s.A,s.C    
 # (1, 3) 通过索引获取值，等效于s['A'],s['C']
 # 此方法不适用于索引为数字类型时，数字索引需要使用[]  
   
-# 通过index修改值
-s['A'] = 7
+s.values.tolist()   # 递归转换，内部 NumPy 元素也变成 Python list 适合 嵌套结构、结构化数据
+# [1, 2, 3, 4, 6]
 
-A    7
-B    2
-C    3
-D    4
-E    6
-dtype: int64
- 
+list(s.values)      # 仅展开最外层，内部仍是 NumPy 元素     适合 普通一维数值型 Series，追求性能 
+# [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(6)]
 ```
 
 
@@ -1480,38 +1463,24 @@ dtype: int64
 
 d = {
     'a':11,
-    'b':22,
-    'c':33,
-    'd':44,
-    'e':55
+    'b':22
 }
 s = pd.Series(d)  
 
-
 a    11
 b    22
-c    33
-d    44
-e    55
 dtype: int64
-  
-  
   
   
 d = {
     'a' : np.random.randint(0,10,size=(2,3)),
-    'b' : np.random.randint(0,10,size=(2,3)),
-    'c' : np.random.randint(0,10,size=(2,3)),
-    'd' : np.random.randint(0,10,size=(2,3))
+    'b' : np.random.randint(0,10,size=(2,3))
 }
 
 s = pd.Series(d)
 
-
 a    [[5, 6, 5], [5, 0, 4]]
 b    [[4, 4, 4], [9, 1, 1]]
-c    [[5, 7, 6], [5, 1, 9]]
-d    [[0, 2, 4], [7, 8, 3]]
 dtype: object
 ```
 
@@ -1882,9 +1851,7 @@ df.loc['困困':'多多']   # 左闭右闭（包含左边，右边）
 
 
 
-##### **列切片**
-
-​		
+##### **列切片**	
 
 ```python
 # 列切片  多次切片必须使用loc/iloc
@@ -1928,25 +1895,25 @@ df.loc[:,'数学':'化学']   # 左闭右闭（包含左边，右边）
         [单行索引 / [多行索引]] / [,单行索引 / [多行索引] 报错 []无法在不取列的情况下取行索引，如需实现则须使用 loc / iloc
 
 
+​      使用[]只能是对行进行切片，无法进行列切片
+​        [行切片:行切片] 			返回 DataFrame
+​        [行切片:行切片] [列索引]	  返回 Series
+​        [单列索引] [行切片:行切片]      返回 Series
+​        [多列索引] [行切片:行切片]      返回 DataFrame
 ​    
-      使用[]只能是对行进行切片，无法进行列切片
-        [行切片:行切片] 				 返回 DataFrame
-        [行切片:行切片] [列索引]	 返回 Series
-        [单列索引][行切片:行切片]	返回 Series
-        [多列索引][行切片:行切片]	返回 DataFrame
-    
-        多次切片必须使用loc/iloc，对列做切片必须先对行做切片，即列切片必须使用loc/iloc
-        [行切片:行切片,列切片:列切片]		报错
-      
-     loc[]
-     	使用 loc[] 进行索引时，先行后列
-      	.loc[单行索引]	返回 Series
-      	.loc[[多行索引]]	返回 DataFrame
-      	.loc[单行索引][单列索引]	返回一个值
-      	.loc[单行索引][[多列索引]]	返回多个值  
-      	.loc[[多行索引]][单列索引]	返回 Series
-       	.loc[[多行索引]][[多列索引]]	返回 DataFrame 
-    
+​        多次切片必须使用loc/iloc，对列做切片必须先对行做切片，即列切片必须使用loc/iloc
+​        [行切片:行切片,列切片:列切片]		报错
+​      
+​     loc[]
+​     	使用 loc[] 进行索引时，先行后列
+​      	.loc[单行索引]	返回 Series
+​      	.loc[[多行索引]]	返回 DataFrame
+​      	.loc[单行索引] [单列索引]	返回一个值
+​      	.loc[单行索引] [[多列索引]]	返回多个值  
+​      	.loc[[多行索引]] [单列索引]	返回 Series
+​       	.loc[[多行索引]] [[多列索引]]	返回 DataFrame 
+​    
+
      	使用 loc[] 进行切片时，先行后列，列索引必须使用loc/iloc 且必须先进行行切片
      	  .loc[行切片]		返回 DataFrame	
      	  .loc[行切片,列切片]			返回 DataFrame	
@@ -1956,7 +1923,6 @@ df.loc[:,'数学':'化学']   # 左闭右闭（包含左边，右边）
 ```python
 df.iloc[1:3,1:4]
 df.loc['壮壮':'多多','数学':'化学']  # 上下两者等效
-
 
 
 # 取一行/一列： 使用行索引/列索引
@@ -1995,44 +1961,34 @@ df.iloc[[0,1],1:4]
 
 ##### 		行列操作顺序
 
-​					使用[] / [[]] 进行索引取值时，先对列索引进行取值操作
+​	使用[] / [[]] 进行索引取值时，先对列索引进行取值操作
 
-​					使用loc/iloc进行索引取值时，先对行索引进行取值操作
+​	使用loc/iloc进行索引取值时，先对行索引进行取值操作
 
 
 
 即：
 
-​		 • loc： 基于标签索引和切片，行优先（先行后列），包含结束位置。
-​		 • iloc：基于整数位置索引和切片，行优先（先行后列），不包含结束位置。
- 		• []：	默认用于列索引（列优先），也可以用于行切片（行优先）。
+​	• loc： 基于标签索引和切片，行优先（先行后列），包含结束位置。
+​	• iloc：基于整数位置索引和切片，行优先（先行后列），不包含结束位置。
+​        • []：    默认用于列索引（列优先），也可以用于行切片（行优先）。
 
 
 
+​	切片操作只能先进行行切片，再进行列切片，即使使用loc/iloc 也不能改变顺序
 
+​	使用到loc/iloc时都是先取 行 再取 列
 
-​		切片操作只能先进行行切片，再进行列切片，即使使用loc/iloc 也不能改变顺序
-
-​		使用到loc/iloc时都是先取 行 再取 列
-
-​		使用布尔值进行筛选时也是先对行进行操作
+​	使用布尔值进行筛选时也是先对行进行操作
 
 		使用 [] 进行布尔索引取值时，取决于布尔索引的 Series 是否对应行或列。具体来说，布尔索引 Series 的索引和 axis 参数的设置决定了它用于筛选行还是列。
 		如果没有指定 axis，并且行列数量相同，那么默认情况下 pandas 会将布尔索引 Series 解释为对行进行筛选。这是因为 pandas 默认操作的方向是 axis=0，即按列操作，但在布尔索引中，没有明确指定时，默认会按行进行操作。
 
 
 
+​	Data Frame 与 Series 一致，都没有广播机制
 
-
-
-
-
-
-
-
-​		Data Frame 与 Series 一致，都没有广播机制
-
-​		fill_value : 用于填补**运算中**出现的NaN值，修改未匹配行列的计算默认值，先填充默认值再相加
+​	fill_value : 用于填补**运算中**出现的NaN值，修改未匹配行列的计算默认值，先填充默认值再相加
 
 
 
@@ -2564,9 +2520,9 @@ round(df.mean(),2)
 
 ##### 基本参数
 
-​	**groupby**: 	根据指定的键对数据进行分组。
+​	**groupby**:        根据指定的键对数据进行分组。
 
-​	**agg**: 			对分组后的数据应用聚合操作，如求和、求平均、计数等。
+​	**agg**: 		对分组后的数据应用聚合操作，如求和、求平均、计数等。
 
 ​	**namedagg：**在 groupby 聚合操作中指定多个聚合函数并为其结果命名
 
@@ -2577,6 +2533,17 @@ df.groupby().agg(
 name_x = pandas.NamedAgg(column=None, aggfunc=None),
 name_y = pandas.NamedAgg(column=None, aggfunc=None)
 )
+
+file_data.groupby('户型',as_index=False)\
+    .agg(数量 = pd.NamedAgg(column='区域',aggfunc=pd.Series.count))\
+    .sort_values(by='数量',ascending=False)\
+    .query('数量 > 50').shape
+
+
+# 最新方法
+file_data.groupby('户型',as_index=False)\
+    .agg(数量 = ('区域','sum'))...
+
 ```
 
 
@@ -2670,9 +2637,7 @@ df.groupby(['Name', 'Subject'])['Score'].mean().reset_index()
 0	Alice		Math			85.0
 1	Alice		Science		89.0
 2	Bob			Math			91.0	
-3	Bob			Science		95.0
-4	Charlie	Math			78.0
-5	Charlie	Science		92.0
+...
 """
 ```
 
@@ -2698,9 +2663,7 @@ df['Group_Avg'] = df.groupby('Category')['Value'].transform('mean')
 0        A     10       15.0
 1        A     20       15.0
 2        B     30       35.0
-3        B     40       35.0
-4        C     50       55.0
-5        C     60       55.0
+...
 """
 ```
 
@@ -2717,13 +2680,13 @@ data.groupby('title').apply(lambda x: x.sort_values('age').head(5))
 使用每个分组的平均值填充 NA
 
 ```python
-data.groupby(group_key).apple(lambda x: x.fillna(x.mean()))
+data.groupby(group_key).apply(lambda x: x.fillna(x.mean()))
 ```
 
 每一列的空值都有不同的填充值
 
 ```python
-data.groupby(group_key).apple(lambda x: x.fillna({'East': 0.5,'West': -1}))
+data.groupby(group_key).apply(lambda x: x.fillna({'East': 0.5,'West': -1}))
 ```
 
 
@@ -2955,10 +2918,7 @@ print(filtered_data)
   to_key  value
 0      A     20
 1      A     30
-2      B     40
-3      B     50
-4      C     60
-5      D     70
+...
 6      D     80
 """
 ```
@@ -2982,6 +2942,10 @@ result = df.groupby('product').agg(
     total_sales=pd.NamedAgg(column='sales', aggfunc='sum'),
     average_sales=pd.NamedAgg(column='sales', aggfunc='mean')
 )
+
+# 最新方法
+file_data.groupby('户型',as_index=False)\
+    .agg(数量 = ('区域','sum'))...
 ```
 
 
@@ -8223,4 +8187,1063 @@ ivMat,ivCatBin,Attr_problem = IV_Chi2(data,'Y')
 
 
 ```
+
+
+
+#### 海致-AML
+
+##### CODE_TOOL
+
+###### BasicFunc
+
+```python
+import numpy as np
+import pandas as pd
+import scipy.stats as st
+
+
+class BasicFunc(object):
+    """
+    功能说明：统一的基键函数接口
+    """
+
+    def __init__(self):
+        pass
+
+    ##平均值
+    @staticmethod
+    def get_avg(li):
+        return float(np.mean(li))
+
+    ##10%分位值
+    @staticmethod
+    def get_10_per(li):
+        return float(np.percentile(li, 10))
+
+    ##25%分位值
+    @staticmethod
+    def get_25_per(li):
+        return float(np.percentile(li, 25))
+
+    ##射中位数
+    @staticmethod
+    def get_50_per(li):
+        return float(np.median(li))
+
+    ##75%分位值
+    @staticmethod
+    def get_75_per(li):
+        return float(np.percentile(li, 75))
+
+    ##90%分位值
+    @staticmethod
+    def get_90_per(li):
+        return float(np.percentile(li, 90))
+
+    ##四分位距
+    @staticmethod
+    def get_4_dis(li):
+        return float(np.percentile(li, 75) - np.percentile(li, 25))
+
+    ##最大值
+    @staticmethod
+    def get_max(li):
+        return float(np.max(li))
+
+    ##最小值
+    @staticmethod
+    def get_min(li):
+        return float(np.min(li))
+
+    ##极差
+    @staticmethod
+    def get_max_gap(li):
+        return float(np.max(li) - np.min(li))
+
+    ##标准差
+    @staticmethod
+    def get_std(li):
+        return float(np.std(li))
+
+    ##变异系数
+    @staticmethod
+    def get_cv(li):
+        return float(np.std(li) / np.mean(li))
+
+    ###偏度
+    @staticmethod
+    def get_skew(li):
+        return float(st.skew(li))
+
+    ## 峰度
+    @staticmethod
+    def get_kur(li):
+        return float(st.kurtosis(li))
+
+    ## 平均偏差
+    @staticmethod
+    def get_avg_gap(li):
+        return float(np.mean(abs(li - np.mean(li))))
+
+    ##信息熵
+    # def get_ent(li)
+
+    ##按连续相同交易方向分组
+    @staticmethod
+    def generate_group_id(li):
+        li = li.tolist()
+        lag_li = [li[0]] + li[:-1]
+        return abs(np.array(li) - np.array(lag_li)).cumsum()
+
+    ##构建差分序列
+    @staticmethod
+    def generate_diff(li):
+        li = li.tolist()
+        return np.diff(li, axis=0, prepend=li[0])
+
+    ##构建元素比值序列
+    @staticmethod
+    def generate_pct(li):
+        li = li.tolist()
+        last_li = li[1:] + [li[-1]]
+        return np.array(last_li) / np.array(li)
+
+    ##生成凹凸性趋势
+    @staticmethod
+    def generate_ser(li):
+        li = li.tolist()
+        ser = []
+        sum_li = np.array(li).cumsum()
+        for i in range(len(li)):
+            ser.append(sum_li[:i + 1])
+        return (sum_li + sum_li[0]) / 2 - list(map(np.median, ser))
+
+    ##获取众数个数
+    @staticmethod
+    def a_get_mode_size(li):
+        return len(pd.Series(data=li).mode())
+
+    ##获取众数占比
+    @staticmethod
+    def a_get_mode_frac(li):
+        li = li.tolist()
+        return st.mode(li)[1][0] / sum(li)
+
+    ##信息熵
+    @staticmethod
+    def a_get_infor(li):
+        a = np.array(li) / sum(li)
+        return sum(np.log2(a) * a * (-1))
+
+    def all_func(self):
+        return list(filter(lambda x: x.startswith('get') and callable(getattr(self.x)), dir(self)))
+
+    def all_func_a(self):
+        return list(filter(lambda x: x.startswith('a_get') and callable(getattr(self.x)).dir(self)))
+
+```
+
+
+
+
+
+###### MyUtils
+
+```python
+import pandas as pd
+from functools import reduce
+import numpy as np
+
+
+class MyUtils(object):
+    """工具类，封装常用方法
+    """
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def data_process_1(raw_pd: pd.DataFrame, col_name: str):
+        """根据指定col_name进行过滤，然后根据客户号cst_id 与 指定col_name 进行分组
+        Args:
+            raw_pd (pd.DataFrame): 客户号cst_id与指定
+            col_name进行分组
+            col_name (string): 指定的col_name列名
+            return(pd.DataFrame):返回分组的交易次数、交易金额和账户余额
+        """
+        raw_pd_1 = raw_pd[['cst_id', col_name, 'tran_amount', 'tran_banlance']]
+        # 逻辑值：raw_pd_1[0] 为cst_id  而raw_pd_1[1]为列名
+        # 去除 col_name 为NaN或空字符的数据
+        raw_filter_pd = raw_pd_1[(raw_pd_1[col_name] != ' ') & (raw_pd_1[col_name].notna())]
+        res_pd_temp = raw_filter_pd.groupby(['cst_id', col_name]).agg(
+            {'tran_amount': ['count', 'sum'], 'tran_banlance': ['sum']})
+        res_pd_1 = res_pd_temp.loc(axis=1)['tran_amount'].rename(
+            columns={'count': 'tran_amount_count', 'sum': 'tran_banlance_sum'}).reset_index()
+
+        res_pd_2 = res_pd_temp.loc(axis=1)['tran_banlance'].rename(columns={'sum': 'tran_banlance_sum'}).reset_index()
+
+        res_pd = pd.merge(res_pd_1, res_pd_2, on=['cst_id', col_name], how='inner')
+        return res_pd
+
+
+
+    @staticmethod
+    def data_process_2(raw_pd: pd.DataFrame, col_name: str, sum_col: str, base_func_list: list):
+        """根据指定的col_name 进行过滤，然后根据客户号cst_id与指定col_name进行分组
+
+        Args:
+            raw_pd (pd.DataFrame): 客户号，指定col_name以及sunm_col
+            col_name (str): 指定的列名
+            sum_col (str): 指定的统计列
+            base_func_list (list): 对统计列进行统计的函数
+            return(pd.DataFrame)
+        """
+        raw_pd_1 = raw_pd[['partyid_casedate', col_name, sum_col]]
+        raw_filter_pd = raw_pd_1[(raw_pd_1[col_name] != ' ') & (raw_pd_1[col_name].notna())]
+        res_pd_temp = raw_filter_pd.groupby(['partyid_casedate', col_name]).agg({sum_col: base_func_list})
+        rename_dict = {}
+        for i in base_func_list:
+            rename_dict[i] = sum_col + '_' + i
+        res_pd = res_pd_temp.loc(axis=1)[sum_col].rename(columns=rename_dict).reset_index()
+        return res_pd
+
+    @classmethod
+    def get_feature_4_basefunc(cls, raw_pd: pd.DataFrame, func_list: list, feature_name_prefix: str):
+        """根据生成的交易金额与交易次数序列生成特征
+
+        Args:
+            raw_pd (pd.DataFrame): 按照客户号与对应交易特征种类生成的交易金额与交易次数序列，账户余额序列。列名tran_amount_count,tran_amount_sum,tran_banlance_sum
+            func_list (list): list需要对序列处理的基础函数列表
+            feature_name_prefix (str): 最后生成的特征名称前缀
+
+        Returns:
+            pd.DataFrame: 返回带客户号的特征列表
+        """
+        # 按基础函数聚合
+        raw_pd_2 = raw_pd.groupby('cst_id') \
+            .agg({'tran_amount_count': func_list \
+                     , 'tran_amount_sum': func_list \
+                     , 'tran_banlance_sum': func_list})
+        ##调整pd.DataFrame并重命名列名
+
+        rename_dict = {}
+        for col in raw_pd_2.loc(axis=1)['tran_amount_count'].columns:
+            rename_dict[col] = feature_name_prefix + '_tran_amount_count_' + col
+        res_pd_1 = raw_pd_2.loc(axis=1)['tran_amount_count'].rename(columns=rename_dict).reset_index()
+
+        rename_dict = {}
+        for col in raw_pd_2.loc(axis=1)['tran_amount_sum'].columns:
+            rename_dict[col] = feature_name_prefix + '_tran_amount_sum_' + col
+        res_pd_2 = raw_pd_2.loc(axis=1)['tran_amount_sum'].rename(columns=rename_dict).reset_index()
+
+        rename_dict = {}
+        for col in raw_pd_2.loc(axis=1)['tran_banlance_sum'].columns:
+            rename_dict[col] = feature_name_prefix + 'tran_banlance_sum' + col
+        res_pd_3 = raw_pd_2.loc(axis=1)['tran_banlance_sum'].rename(columns=rename_dict).reset_index()
+        res_pd = cls.merge_pd_4_list([res_pd_1, res_pd_2, res_pd_3])
+        return res_pd
+
+    @classmethod
+    def get_feature_4_col_1(cls, raw_pd, func_list, col_name, feature_name_prefix='col_name'):
+        """根据指定的col_name进行过滤，然后根据客户号cst_id与 指定col_name 进行分组后，根据生成的序列生成特征
+
+        Args:
+            raw_pd (pd.DataFrame): 客户号 与 指定col_name 以及 交易金额字段 tran_amount
+            func_list (list): 需要对序列处理的基础函数列表
+            col_name (string): 指定的col_name
+            feature_name_prefix (str, optional): 最后生成的特征名称前缀. Defaults to 'col_name'.
+
+        Returns:
+            _type_: _description_
+        """
+        process_pd = cls.data_process_1(raw_pd, col_name)
+        if feature_name_prefix == 'col_name':
+            feature_name_prefix = col_name
+        res_pd = cls.get_feature_4_basefunc(process_pd, func_list, feature_name_prefix)
+        return res_pd
+
+    @staticmethod
+    def merge_pd_4_list(pd_list, merge_method='left', on='partyid_casedate'):
+        """根据pd.DataFrame list  merge所以pd
+
+        Args:
+            pd_list (list): 需要merge的pd_list，第一个元素为主表
+            merge_method (str, optional): merge的方法. Defaults to 'left'.
+            on (str, optional): 主键. Defaults to 'cst_id'.
+
+        Returns:
+            pd.DataFrame: _description_
+        """
+        if len(pd_list) < 2:
+            print('pd1ist 长度必须大于 1，当前长度%s' % str(len(pd_list)))
+            return
+        res_pd = reduce(lambda x, y: pd.merge(x, y, on=on, how=merge_method), pd_list)
+        return res_pd
+
+    @classmethod
+    def get_feature_4_base(cls, raw_pd, func_list, feature_name_prefix, col_list=None):
+        # 特按基础函数聚合
+        base_col_dict = {}
+        if col_list:
+            for col in col_list:
+                base_col_dict[col] = func_list
+        else:
+            col_list = list(raw_pd.columns)[1:]
+            for col in col_list:
+                base_col_dict[col] = func_list
+
+        raw_pd_2 = raw_pd.groupby('cst_id') \
+            .agg(base_col_dict)
+
+        # 调整pd.DataFrame并重命名列名
+        rename_dict = {}
+        res_pd_list = []
+        for agg_col in col_list:
+            for col in raw_pd_2.loc(axis=1)[agg_col].columns:
+                rename_dict[col] = feature_name_prefix + '_' + agg_col + '_' + col
+            res_pd_list.append(raw_pd_2.loc(axis=1)[agg_col].rename(columns=rename_dict).reset_index())
+            if len(res_pd_list) > 1:
+                res_pd = cls.merge_pd_4_list(res_pd_list)
+                return res_pd
+            else:
+                return res_pd_list[0]
+
+    @classmethod
+    def get_feature_4_col_2(cls, raw_pd, func_list, col_name, feature_name_prefix='col_name'):
+        """根据指定的col_name进行过滤，然后根据客户号khh与指定col_nane进行分组后，根据生成的序列生成特征，只对交易次数进行衍生
+
+        Args:
+            raw_pd (pd.DataFrame): 客户号cst_id与指定col_name以及交易金额字段tran_amount
+            func_list (1ist): 1ist需要对序列处理的基础函数列表
+            col_name (string): string指定的col_name列名
+            feature_name_prefix (str, optional): 最后生成的特征名称前缀，默认使用col_name
+        Returns:
+            pd.DataFrame: 返回带客户号的特征列表
+        """
+        process_pd = cls.data_process_1(raw_pd, col_name)
+        if feature_name_prefix == 'col_name':
+            feature_name_prefix = col_name
+        res_pd = cls.get_feature_4_base(process_pd[['cst_id', 'tran_amount']], func_list, feature_name_prefix)
+        return res_pd
+
+    @classmethod
+    def get_feature_4_group_gap(cls, raw_pd, func_list, feature_name_prefix, group_id, gap_col):
+        """根据roup_id生成组间间距序列，并基于基础函数序列生成特征。
+        @param raw_pd:pd.DataFrame按照客户号与对应特征种类生成的基础数据序列，必须包含分组group.1d与计算间距的列
+        @param func_1ist:1ist需要对序列处理的基础函数列表
+        eparam feature-.name_prefix:string最后生成的特征名称前缀
+        @param group_id:string分组ID
+        @param gap._col:string组间间距初始序列
+        @return res_.pdpd.DataFrame返回带客户号的特征列表
+        """
+        raw_pd['lag_%s' % group_id] = raw_pd[group_id].shift(1)
+        raw_pd['lag_%s' % gap_col] = raw_pd[gap_col].shift(1)
+        # 生成序列
+        raw_filter_pd = raw_pd[
+            (raw_pd['lag_%s' % group_id].notna()) & (raw_pd[group_id] != raw_pd['lag_%s' % group_id])]
+        raw_filter_pd['%s_gap' % feature_name_prefix] = raw_filter_pd['lag_%s' % gap_col] - raw_filter_pd[gap_col]
+        raw_filter_pd = raw_filter_pd.drop(['lag_%s' % group_id, 'lag_%s' % gap_col], axis=1)
+        res_pd = cls.get_feature_4_base(raw_filter_pd, func_list, feature_name_prefix, ['%s_gap' % feature_name_prefix])
+        return res_pd
+
+    @staticmethod
+    def reduce_mem_usage(df):
+        """功能说明：降低Pandas DataFrame内存使用率
+        """
+        start_mem = df.memory_usage().sum() / 1024 ** 2
+        numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+        for col in df.columns:
+            col_type = df[col].dtypes
+            if col_type in numerics:
+                c_min = df[col].min()
+                c_max = df[col].max()
+                if str(col_type)[:3] == 'int':
+                    if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
+                        df[col] = df[col].astype(np.int8)
+                    elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
+                        df[col] = df[col].astype(np.int16)
+                    elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
+                        df[col] = df[col].astype(np.int32)
+                    elif c_min > np.iinfo(np.int64).min and c_max < np.iinfo(np.int64).max:
+                        df[col] = df[col].astype(np.int64)
+            else:
+                if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
+                    df[col] = df[col].astype(np.float16)
+                elif c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
+                    df[col] = df[col].astype(np.float32)
+                else:
+                    df[col] = df[col].astype(np.float64)
+
+        end_mem = df.memory_usage().sum() / 1024 ** 2
+        print('Memory usage after optimization is : {:.2f}MB'.format(end_mem))
+        print('Decreased by {:.1f}%'.format(100 * (start_mem - end_mem) / start_mem))
+        return df
+
+    @staticmethod
+    def check_col(columns, col_list):
+        """功能说明：检查columns里面是否包含col_list里面的名称
+        """
+        return len(set(columns) & set(col_list)) == len(set(col_list))
+
+    @classmethod
+    def get_top_n_recall(cls, res_df, top_n):
+        """ 功能说明：获取res_df top_n的召回率，精准率
+            @param res_.dfpd.DataFrame模型预测的结果表必须包含的列[cst_id,score,
+            label']
+            label上报或排除  score 模型预测得分
+            @param top_nint/float f1oat时必须小于1表示top占比，int时表示前多少行
+            @return pd.DataFrame top_n,recall,precision
+        """
+        if cls.check_col(res_df.columns.tolist(), ['cst_id', 'score', 'label']) == False:
+            print("必须包含【'cst_id','score','label']!")
+            return pd.DataFrame()
+        res_reindex_df = res_df.sort_values(['score'], ascending=False).reset_index(drop=True)
+        top_n_index = 0
+        if top_n > 1:
+            top_n_index = int(top_n)
+        else:
+            top_n_index = int(len(res_df.index) * top_n)
+        top_n_pd = res_reindex_df.iloc[:top_n_index, :]
+        recall = round(len(top_n_pd[top_n_pd['label'].isin([1])]) / len(res_df[res_df['label'].isin([1])]), 4)
+        precision = round(len(top_n_pd[top_n_pd['label'].isin([1])]) / len(top_n_pd), 4)
+        return pd.DataFrame.from_dict({'top_n': [top_n], 'recall': [recall], 'precision': [precision]})
+
+    @classmethod
+    def get_khh_jyls(cls, spark, dt, khh_li, jyls_cumsum_bool, select_cols, table_dict):
+        """ 
+        功能说明：获取所给客户列表和字段列表的90天交易流水
+        @param spark SparkSession初始化的SparkSession
+        @param dt抽取的交易流水表中间表的时间分区
+        @param khh_li list所需的客户列表
+        @param jyls_.cumsum_bool:boo1客户列表累计的历史交易数据量  是否超过最大行数
+        @param select_cols: list所需字段列表
+        @param table_dict: dict sql语句中需要替换的表名字典
+        @return res_pd: pd.DataFrame所需交易流水表
+        """
+        cust_pd = pd.DataFrame()
+        cust_pd['cst_id'] = khh_li
+        cust_df = spark.createDataFrame(cust_pd)
+        cust_df.registerTempTable("cust_tb")
+        select_cols_str = ','.join(select_cols)
+        sql_str_2 = '''
+        select a.* from
+            (select cst_id,%s from priv_app_aicloud.kypf_report_zs_90_jyls where dt ='%s') as a
+        inner join cust_tb as b
+        on a.khh = b.khh
+        ''' % (select_cols_str, dt)
+
+        sql_str_2 = cls.table_replace(sql_str_2, table_dict)
+        if jyls_cumsum_bool:
+            res_pd = cls.toPandas(spark.sql(sql_str_2), 30)
+        else:
+            res_pd = spark.sql(sql_str_2).toPandas()
+        return res_pd
+
+    # 分布式优化toPandas
+    @staticmethod
+    def _map_to_pandas(rdds):
+        return [pd.DataFrame(list(rdds))]
+
+    @classmethod
+    def toPandas(cls, df, n_partitions=None):
+        if n_partitions is not None: df = df.repartition(n_partitions)
+        df_pand = df.rdd.mapPartitions(cls._map_to_pandas).collect()
+        df_pand = pd.concat(df_pand)
+        df_pand.columns = df.columns
+        return df_pand
+
+    @staticmethod
+    def table_replace(sql_str, table_dict):
+        """功能说明：替换表名
+        Args:
+            sql_str (string): 需要替换的SQL语句
+            tablie_dict :SQL语句中需要替换的表名字典
+            return：sql_str_r(string) ： 替换完表名的sql语句
+        """
+        for k, v in table_dict.items():
+            sql_str = sql_str.replace(k, v)
+        return sql_str
+
+```
+
+
+
+##### CODE_SPLIT
+
+######  features_order
+
+```python
+import sys
+import pandas as pd
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+import lightgbm as lgb
+
+'''
+使用sys.argv获取命令行输入的参数，将其作为文件路径，
+通过pandas读取CSV格式的数据文件，将其存储在名为data的变量中。
+'''
+path = sys.argv
+data = pd.read_csv(path[1])
+
+# data=pd.read_csv("../data/train_feature.csv")
+
+'''
+使用sklearn.model_selection中的train_test_split函数，
+将数据集data按照7:3的比例分割成训练集和测试集。
+其中，x_train和x_test分别为训练集和测试集的特征矩阵，
+y_train和y_test分别为训练集和测试集的标签。
+data.iloc[:, 2:]表示选取data数据集的第3列至最后一列作为特征矩阵，
+data[['label']]表示选取data数据集的label列作为标签。
+'''
+x_train, x_test, y_train, y_test = train_test_split(data.iloc[:, 2:], data[['label']], test_size=0.3, random_state=1)
+
+'''
+定义了一个字典search_params，包含了待优化的超参数及其范围。
+num_leaves、n_estimators和min_data_in_leaf分别表示决策树的叶子节点数、弱学习器数量和叶子节点最少包含的样本数,learning_rate则表示学习率
+'''
+search_params = {
+    'num_leaves': range(200, 500, 20),
+    'n_estimators': range(200, 500, 20),
+    'min_data_in_leaf': range(100, 200, 20),
+    'learning_rate': [0.01, 0.05, 0.1, 0.2, 0.3]
+}
+
+'''
+定义了一个字典other_params，包含了模型的其他超参数。
+具体来说，objective表示模型的目标函数为二分类问题；
+boosting_type表示使用GOSS算法提升模型性能；
+max_depth表示每棵决策树的最大深度为4；
+is_unbalance则表示数据不均衡。
+'''
+other_params = {
+    'objecttive': 'binary',
+    'boosting_type': 'goss',
+    'max_depth': 4,
+    'is_unbalance': 'True'
+}
+
+'''
+这段代码使用lightgbm模型库中的LGBMClassifier函数，
+创建了一个基础模型gbm，并使用随机搜索法（RandomizedSearchCV）对其超参数进行优化。
+具体来说，n_iter=30表示随机搜索迭代30次；
+scoring='precision'表示评价指标为精确率；
+cv=3表示使用3折交叉验证。最后，将最优超参数打印输出。
+'''
+gbm = lgb.LGBMClassifier(**other_params)
+optimized_GBM = RandomizedSearchCV(gbm, search_params, n_iter=30, scoring='precision', cv=3, n_jobs=12)
+optimized_GBM.fit(x_train, y_train)
+optimized_GBM.best_params_
+
+'''
+使用字典params将基础模型的超参数与最优超参数合并，
+并使用LGBMClassifier函数创建最优模型best_gbm。
+然后，使用fit函数将训练集x_train和y_train输入到最优模型中进行训练，生成模型model。
+'''
+params = dict(other_params, **optimized_GBM.best_params_)
+best_gbm = lgb.LGBMClassifier(**params)
+model = best_gbm.fit(x_train, y_train)
+
+'''
+创建一个名为feature_importance_pd的DataFrame对象，
+其中col_name列为特征名称，importance列为对应特征的重要性值。
+然后，将训练好的模型model中的特征重要性值按从大到小排序，
+并将结果保存在feature_importance_pd中。
+最后，将feature_importance_pd保存为CSV格式的文件，存储在../data/feature_level.csv路径下。
+'''
+feature_importance_pd = pd.DataFrame()
+feature_importance_pd['col_name'] = x_train.columns
+feature_importance_pd['importance'] = model.feature_importances_
+feature_importance_pd.sort_values('importance', ascending=False)
+
+feature_importance_pd.to_csv('../data/feature_level.csv', index=False)
+
+```
+
+
+
+###### Get_features
+
+```python
+from code_tool.BasicFunc import BasicFunc
+from code_tool.MyUtils import MyUtils
+import time
+from datetime import datetime
+
+
+class Getfeatures(object):
+    def __init__(self) -> None:
+        pass
+
+    def get_features_100(data):
+        res_raw_pd = data[['partyid_casedate', 'receive_pay_cd', 'opp_acct_num', 'cnt_amt',
+                           'opp_name', 'channel', 'cash_trans_flag']]
+        res_raw_pd['je_num'] = res_raw_pd['cnt_amt'].astype(float)
+        khh_pd = res_raw_pd[['partyid_casedate']].drop_duplicates()
+
+        # dfkhmc对方客户名称
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 1]
+        res_pd_temp_1 = MyUtils.data_process_2(raw_in_pd, 'opp_name', 'je_num', ['sum'])
+        res_pd_1_1 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'dfkhmc_je_num_sum_get_max_y'}). \
+            reset_index()
+        # 全量
+        res_pd_temp_1 = MyUtils.data_process_2(res_raw_pd, 'opp_name', 'je_num', ['sum'])
+        res_pd_1_2 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'dfkhmc_je_num_sum_get_max_x'}). \
+            reset_index()
+
+        # channel交易渠道出帐
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        res_pd_temp_1 = MyUtils.data_process_2(raw_in_pd, 'channel', 'je_num', ['sum'])
+        res_pd_1_3 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'channel_je_num_sum_get_max_y'}). \
+            reset_index()
+        # channel交易渠道
+        res_pd_temp_1 = MyUtils.data_process_2(res_raw_pd, 'channel', 'je_num', ['sum'])
+        res_pd_1_4 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'channel_je_num_sum_get_max_x'}). \
+            reset_index()
+
+        # cash_trans_flag现金转账出帐
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        res_pd_temp_1 = MyUtils.data_process_2(raw_in_pd, 'cash_trans_flag', 'je_num', ['sum'])
+        res_pd_1_5 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'cash_trans_flag_je_num_sum_get_max_y'}). \
+            reset_index()
+        # cash_trans_flag现金转账出帐
+        res_pd_temp_1 = MyUtils.data_process_2(res_raw_pd, 'cash_trans_flag', 'je_num', ['sum'])
+        res_pd_1_6 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_max]}).loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_max': 'cash_trans_flag_je_num_sum_get_max_x'}). \
+            reset_index()
+
+        res_pd_1 = MyUtils.merge_pd_4_list(
+            [khh_pd, res_pd_1_1, res_pd_1_2, res_pd_1_3, res_pd_1_4, res_pd_1_5, res_pd_1_6])
+
+        # dfzh_je_num_count_get_25_per_x
+        #
+        #
+        res_raw_pd = data[['partyid_casedate', 'receive_pay_cd', 'opp_acct_num', 'cnt_amt', 'amt_val', 'opp_isparty']]
+        res_raw_pd['je_num'] = res_raw_pd['cnt_amt'].astype(float)
+        res_raw_pd['zhye_num'] = res_raw_pd['amt_val'].astype(float)
+
+        # 全量数据
+        res_pd_temp_1 = MyUtils.data_process_2(res_raw_pd, 'opp_acct_num', 'je_num', ['count'])
+        # aaa13 19
+        res_pd_6_1 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_25_per, BasicFunc.get_50_per]}).loc(axis=1)['je_num_count']. \
+            rename(
+            columns={'get_25_per': 'dfzh_je_num_count_get_25_per_x', 'get_50_per': 'dfzh_je_num_count_get_50_per_x'}). \
+            reset_index()
+
+        # 出帐数据
+        raw_out_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        res_pd_temp_1 = MyUtils.data_process_2(raw_out_pd, 'opp_acct_num', 'je_num', ['count'])
+        res_pd_6_2 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_50_per]}).loc(axis=1)['je_num_count']. \
+            rename(columns={'get_50_per': 'dfzh_je_num_count_get_50_per'}). \
+            reset_index()
+        res_pd_6 = MyUtils.merge_pd_4_list([khh_pd, res_pd_6_1, res_pd_6_2])
+
+        # 入账数据
+        # wh_zhye_num_get_kur_y 
+        #
+        #
+
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 1]
+        # 我行客户
+        res_pd_temp_3 = res_raw_pd[res_raw_pd['opp_isparty'] == 1]
+        res_pd_temp_4 = res_pd_temp_3.groupby('partyid_casedate'). \
+            agg({'zhye_num': [BasicFunc.get_kur], 'je_num': [BasicFunc.get_max, BasicFunc.get_max_gap]})
+
+        res_pd_7_4 = res_pd_temp_4.loc(axis=1)['je_num'].rename(
+            columns={'get_amx': 'wh_je_num_get_max_y', 'get_mx_gap': 'wh_je_num_get_max_gap_y'}).reset_index()
+
+        # 非我行客户
+        """ 
+        以下两行可能出现错误
+        """
+        res_pd_temp_5 = res_raw_pd[res_raw_pd['opp_isparty'] != 1]
+        res_pd_temp_6 = res_pd_temp_5.groupby('partyid_casedate'). \
+            agg({'zhye_num': [BasicFunc.get_25_per], 'je_num': [BasicFunc.get_25_per]})
+
+        res_pd_7_5 = res_pd_temp_6.loc(axis=1)['zhye_num'].rename(
+            columns={'get_25_per': 'fwh_zhye_num_get_25_per_y'}).reset_index()
+        res_pd_7_6 = res_pd_temp_6.loc(axis=1)['je_num'].rename(
+            columns={'get_25_per': 'fwh_je_num_get_25_per_y'}).reset_index()
+
+        # 出帐数据
+        # wh_zhye_num_get_kur
+        #
+        #
+        raw_out_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        # 我行客户
+        res_pd_temp_7 = res_raw_pd[res_raw_pd['opp_isparty'] == 1]
+        res_pd_temp_8 = res_pd_temp_7.groupby('partyid_casedate'). \
+            agg({'zhye_num': [BasicFunc.get_kur], 'je_num': [BasicFunc.get_skew, BasicFunc.get_kur]})
+
+        res_pd_7_7 = res_pd_temp_8.loc(axis=1)['zhye_num'].rename(
+            columns={'get_kur': 'wh_zhye_num_get_kur'}).reset_index()
+        res_pd_7_8 = res_pd_temp_8.loc(axis=1)['je_num'].rename(
+            columns={'get_skew': 'wh_je_num_get_skew', 'get_kur': 'wh_je_num_get_kur'}).reset_index()
+
+        # 非我行客户
+        res_pd_temp_9 = res_raw_pd[res_raw_pd['opp_isparty'] != 1]
+        res_pd_temp_10 = res_pd_temp_9.groupby('partyid_casedate'). \
+            agg({'je_num': [BasicFunc.get_75_per, BasicFunc.get_4_dis, BasicFunc.get_avg]})
+
+        res_pd_7_9 = res_pd_temp_10.loc(axis=1)['je_num']. \
+            rename(columns={'get_75_per': 'fwh_je_num_get_75_per', 'get_4_dis': 'fwh_je_num_get_4_dis',
+                            'get_avg': 'fwh_je_num_get_avg'}). \
+            reset_index()
+
+        res_pd_7 = MyUtils.merge_pd_4_list(
+            [khh_pd, res_pd_7_4, res_pd_7_5, res_pd_7_6, res_pd_7_7, res_pd_7_8, res_pd_7_9])
+
+        # dg_je_num_get_max_y
+        #
+        #
+        #
+        #
+        res_raw_pd = data[['partyid_casedate', 'receive_pay_cd', 'opp_party_class_cd', 'cnt_amt', 'amt_val']]
+        res_raw_pd['je_num'] = res_raw_pd['cnt_amt'].astype(float)
+        res_raw_pd['zhye_num'] = res_raw_pd['amt_val'].astype(float)
+
+        # 出帐数据
+        raw_out_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        ## 对公客户
+        res_pd_temp_1 = raw_out_pd[raw_out_pd['opp_party_class_cd'].isin(['C'])]
+        # aaa
+        res_pd_8_1 = res_pd_temp_1.groupby('partyid_casedate'). \
+            agg({'je_num': [BasicFunc.get_max, BasicFunc.get_4_dis]}).loc(axis=1)['je_num']. \
+            rename(columns={'get_max': 'dg_je_num_get_max', 'get_4_dis': 'dg_je_num_get_4_dis'}). \
+            reset_index()
+
+        # 入账数据
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 1]
+        ## 对公客户
+        res_pd_temp_4 = raw_in_pd[raw_in_pd['opp_party_class_cd'].isin(['C'])]
+        # aaa
+        res_pd_8_4 = res_pd_temp_4.groupby('partyid_casedate'). \
+            agg({'je_num': [BasicFunc.get_max, BasicFunc.get_max_gap]}).loc(axis=1)['je_num']. \
+            rename(columns={'get_max': 'dg_je_num_get_max_y', 'get_max_gap': 'dg_je_num_get_max_gap_y'}). \
+            reset_index()
+
+        res_pd_8 = MyUtils.merge_pd_4_list([khh_pd, res_pd_8_1, res_pd_8_4])
+
+        # date_group_ser_je_num_sum_get_avg
+        #
+        #
+        #
+        res_raw_pd = data[['partyid_casedate', 'receive_pay_cd', 'cnt_amt', 'amt_val', 'tx_dt', 'dt_time', 'case_date']]
+        res_raw_pd['je_num'] = res_raw_pd['cnt_amt'].astype(float)
+        res_raw_pd['zhye_num'] = res_raw_pd['amt_val'].astype(float)
+        res_raw_pd['receive_pay_cd'] = res_raw_pd['receive_pay_cd'].astype(int)
+
+        # 基于交易方向分组
+        raw_sort_pd = res_raw_pd.sort_values(['partyid_casedate', 'tx_dt', 'dt_time'], ascending=True)
+        raw_sort_pd['group_id'] = raw_sort_pd.groupby('partyid_casedate')['receive_pay_cd'].transform(
+            BasicFunc.generate_group_id)
+        raw_sort_pd['date_group'] = raw_sort_pd['tx_dt'] + raw_sort_pd['group_id'].apply(lambda x: '_' + str(x))
+
+        raw_group_pd = MyUtils.data_process_2(raw_sort_pd[['partyid_casedate', 'date_group', 'je_num']], 'date_group',
+                                              'je_num', ['sum'])
+        raw_group_pd = raw_group_pd.sort_values(['partyid_casedate', 'date_group'], ascending=True)
+        raw_ser_pd = raw_group_pd[['partyid_casedate', 'je_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_ser)
+        raw_ser_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_1_tmp = raw_ser_pd.groupby('partyid_casedate').agg({'je_num_sum': [BasicFunc.get_avg]})
+        res_pd_16_1 = res_pd_16_1_tmp.loc(axis=1)['je_num_sum'].rename(
+            columns={'get_avg': 'date_group_ser_je_num_get_avg'}).reset_index()
+
+        # 入账数据
+        raw_in_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 1]
+        ##获取交易时间戳
+        raw_in_pd['ts'] = raw_in_pd[['dt_time']].apply(
+            lambda x: time.mktime(time.strptime(x['dt_time'], '%Y/%m/%d %H:%M:%S')), axis=1)
+        raw_in_pd['days'] = raw_in_pd[['tx_dt', 'case_date']]. \
+            apply(
+            lambda x: (datetime.strptime(x['case_date'], '%Y/%m/%d') - datetime.strptime(x['tx_dt'], '%Y/%m/%d')).days,
+            axis=1)
+
+        # 按小时分组
+        raw_in_pd['hour'] = raw_in_pd['dt_time'].apply(lambda x: int(x[11:13]))
+        # 每小时分组
+        raw_in_pd['hours_1_group'] = raw_in_pd[['partyid_casedate', 'days', 'hour']]. \
+            apply(lambda x: str(x['partyid_casedate']) + "_" + str(x['days']) + "_" + str(x['hour']), axis=1)
+        #
+        gap_group = raw_in_pd[['partyid_casedate', 'hours_1_group', 'ts']]. \
+            groupby(['partyid_casedate', 'hours_1_group'])['ts']. \
+            agg(BasicFunc.get_max_gap). \
+            reset_index()
+        res_pd_16_4 = gap_group.groupby('partyid_casedate'). \
+            agg({'ts': [BasicFunc.get_90_per]}).loc(axis=1)['ts']. \
+            rename(columns={'get_90_per': 'hours_1_group_gap_ts_get_90_per_y'}). \
+            reset_index()
+
+        # 获取交易时间戳
+        res_raw_pd['ts'] = res_raw_pd[['dt_time']].apply(
+            lambda x: time.mktime(time.strptime(x['dt_time'], '%Y/%m/%d %H:%M:%S')), axis=1)
+        ##计算交易日期与dt之间的时间差
+        res_raw_pd['days'] = raw_in_pd[['tx_dt', 'case_date']]. \
+            apply(
+            lambda x: (datetime.strptime(x['case_date'], '%Y/%m/%d') - datetime.strptime(x['tx_dt'], '%Y/%m/%d')).days,
+            axis=1)
+        ##每15天分组
+        res_raw_pd['days_15_group'] = res_raw_pd[['partyid_casedate', 'days']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days'] // 15), axis=1)
+        res_raw_pd = res_raw_pd.sort_values(['partyid_casedate', 'days_15_group'], ascending=True)
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'days_15_group', 'je_num']],
+                                              'days_15_group', 'je_num', ['count'])
+        res_pd_16_7 = raw_group_pd.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_cv]}).loc(axis=1)['je_num_count']. \
+            rename(columns={'get_cv': 'days_15_group_je_num_count_get_cv_x'}). \
+            reset_index()
+
+        raw_diff_pd = raw_group_pd[['partyid_casedate', 'je_num_count']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_diff)
+        raw_diff_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_8 = raw_diff_pd.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_avg]}). \
+            loc(axis=1)['je_num_count']. \
+            rename(columns={'get_avg': 'days_15_group_diff_je_num_count_get_avg_x'}). \
+            reset_index()
+
+        raw_pct_pd = raw_group_pd[['partyid_casedate', 'je_num_count']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_pct)
+        raw_pct_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_9_tmp = raw_pct_pd.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_10_per, BasicFunc.get_75_per, BasicFunc.get_avg]})
+        res_pd_16_9 = res_pd_16_9_tmp.loc(axis=1)['je_num_count']. \
+            rename(columns={'get_10_per': 'days_15_group_pct_je_num_count_get_10_per',
+                            'get_75_per': 'days_15_group_pct_je_num_count_get_75_per',
+                            'get_avg': 'days_15_group_pct_je_num_count_get_avg'}). \
+            reset_index()
+
+        #
+        #
+        res_raw_pd['hour'] = res_raw_pd['dt_time'].apply(lambda x: int(x[11:13]))
+        res_raw_pd['minute'] = res_raw_pd['dt_time'].apply(lambda x: int(x[14:16]))
+        # 每1分钟分组
+        res_raw_pd['minute_1_group'] = res_raw_pd[['partyid_casedate', 'days', 'hour', 'minute']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days']) + '_' + str(x['hour']) + str(x['minute']),
+                  axis=1)
+        res_raw_pd = res_raw_pd.sort_values(['partyid_casedate', 'minute_1_group'], ascending=True)
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'minute_1_group', 'zhye_num']],
+                                              'minute_1_group', 'zhye_num', ['sum'])
+        raw_diff_pd = raw_group_pd[['partyid_casedate', 'zhye_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_diff)
+        raw_diff_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_12 = raw_diff_pd.groupby('partyid_casedate'). \
+            agg({'zhye_num_sum': [BasicFunc.get_avg_gap, BasicFunc.get_max_gap, BasicFunc.get_std]}). \
+            loc(axis=1)['zhye_num_sum']. \
+            rename(columns={'get_avg_gap': 'minute_1_group_diff_zhye_num_sum_get_avg_gap_x',
+                            'get_max_gap': 'minute_1_group_diff_zhye_num_sum_get_max_gap_x',
+                            'get_std': 'minute_1_group_diff_zhye_num_sum_get_std_x'}). \
+            reset_index()
+
+        # 每1天分组
+        res_raw_pd['day_1_group'] = res_raw_pd[['partyid_casedate', 'days']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days']), axis=1)
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'day_1_group', 'zhye_num']],
+                                              'day_1_group', 'zhye_num', ['sum'])
+        res_pd_16_15 = raw_group_pd.groupby('partyid_casedate'). \
+            agg({'zhye_num_sum': [BasicFunc.get_min]}). \
+            loc(axis=1)['zhye_num_sum']. \
+            rename(columns={'get_avg_gap': 'day_1_group_zhye_num_sum_get_min_x'}). \
+            reset_index()
+
+        # 每小时分组
+        res_raw_pd['hours_1_group'] = res_raw_pd[['partyid_casedate', 'days', 'hour']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days']) + '_' + str(x['hour']), axis=1)
+        gap_group = res_raw_pd[['partyid_casedate', 'hours_1_group', 'ts']]. \
+            groupby(['partyid_casedate', 'hours_1_group'])['ts'].agg(BasicFunc.get_max_gap).reset_index()
+        res_pd_16_17 = gap_group.groupby('partyid_casedate'). \
+            agg({'ts': [BasicFunc.get_75_per, BasicFunc.get_90_per, BasicFunc.get_4_dis]}). \
+            loc(axis=1)['ts']. \
+            rename(columns={'get_75_per': 'hours_1_group_gap_ts_get_75_per_x',
+                            'get_90_per': 'hours_1_group_gap_ts_get_90_per_x',
+                            'get_4_dis': 'hours_1_group_gap_ts_get_4_dis_x'}). \
+            reset_index()
+
+        # 每三天分组
+        res_raw_pd['days_3_group'] = res_raw_pd[['partyid_casedate', 'days']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days'] // 3), axis=1)
+        res_raw_pd = res_raw_pd.sort_values(['partyid_casedate', 'days_3_group'], ascending=True)
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'days_3_group', 'je_num']],
+                                              'days_3_group', 'je_num', ['sum'])
+        raw_ser_pd = raw_group_pd[['partyid_casedate', 'je_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_ser)
+        raw_ser_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_19 = raw_ser_pd.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_75_per]}). \
+            loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_75_per': 'days_3_group_ser_je_num_sum_get_75_per_x'}). \
+            reset_index()
+
+        # 每7天分组
+        res_raw_pd['days_7_group'] = res_raw_pd[['partyid_casedate', 'days']]. \
+            apply(lambda x: x['partyid_casedate'] + '_' + str(x['days'] // 7), axis=1)
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'days_7_group', 'je_num']],
+                                              'days_7_group', 'je_num', ['sum'])
+        raw_ser_pd = raw_group_pd[['partyid_casedate', 'je_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_ser)
+        raw_ser_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_23 = raw_ser_pd.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_75_per, BasicFunc.get_50_per, BasicFunc.get_4_dis]}). \
+            loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_75_per': 'days_7_group_ser_je_num_sum_get_75_per_x',
+                            'get_50_per': 'days_7_group_ser_je_num_sum_get_50_per_x',
+                            'get_4_dis': 'days_7_group_ser_je_num_sum_get_4_dis_x'}). \
+            reset_index()
+        raw_diff_pd = raw_group_pd[['partyid_casedate', 'je_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_diff)
+        raw_diff_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_24 = raw_diff_pd.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_avg]}). \
+            loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_avg': 'days_7_group_diff_je_num_sum_get_avg_x'}). \
+            reset_index()
+
+        # 出帐数据
+        raw_out_pd = res_raw_pd[res_raw_pd['receive_pay_cd'] == 2]
+        raw_out_pd = raw_out_pd.sort_values(['partyid_casedate', 'days_15_group'], ascending=True)
+        raw_group_pd = MyUtils.data_process_2(raw_out_pd[['partyid_casedate', 'days_15_group', 'je_num']],
+                                              'days_15_group', 'je_num', ['sum'])
+        raw_diff_pd = raw_group_pd[['partyid_casedate', 'je_num_sum']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_diff)
+        raw_diff_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_28 = raw_diff_pd.groupby('partyid_casedate'). \
+            agg({'je_num_sum': [BasicFunc.get_kur, BasicFunc.get_avg]}). \
+            loc(axis=1)['je_num_sum']. \
+            rename(columns={'get_kur': 'days_15_group_diff_je_num_sum_get_kur',
+                            'get_avg': 'days_15_group_diff_je_num_sum_get_avg'}). \
+            reset_index()
+
+        #
+        raw_group_pd = MyUtils.data_process_2(res_raw_pd[['partyid_casedate', 'minute_1_group', 'je_num']],
+                                              'minute_1_group', 'je_num', ['count'])
+        raw_diff_pd = raw_group_pd[['partyid_casedate', 'je_num_count']].groupby('partyid_casedate').transform(
+            BasicFunc.generate_diff)
+        raw_diff_pd['partyid_casedate'] = raw_group_pd['partyid_casedate']
+        res_pd_16_30 = raw_diff_pd.groupby('partyid_casedate'). \
+            agg({'je_num_count': [BasicFunc.get_avg_gap, BasicFunc.get_std]}). \
+            loc(axis=1)['je_num_count']. \
+            rename(columns={'get_avg_gap': 'minute_1_group_diff_je_num_count_get_avg_gap_x',
+                            'get_std': 'minute_1_group_diff_je_num_count_get_std_x'}). \
+            reset_index()
+        #
+        gap_group = res_raw_pd[['partyid_casedate', 'minute_1_group', 'ts']]. \
+            groupby(['partyid_casedate', 'minute_1_group'])['ts'].agg(BasicFunc.get_max_gap).reset_index()
+        res_pd_16_33 = gap_group.groupby('partyid_casedate'). \
+            agg({'ts': [BasicFunc.get_std]}). \
+            loc(axis=1)['ts']. \
+            rename(columns={'get_75_per': 'minute_1_group_gap_ts_get_std_x'}). \
+            reset_index()
+
+        # 合并res_16结果
+        res_16_li = [res_pd_16_1, res_pd_16_4, res_pd_16_7, res_pd_16_8, res_pd_16_9, res_pd_16_9, res_pd_16_12,
+                     res_pd_16_15, res_pd_16_17,
+                     res_pd_16_19, res_pd_16_23, res_pd_16_24, res_pd_16_28, res_pd_16_30, res_pd_16_33]
+
+        res_pd_16 = MyUtils.merge_pd_4_list([khh_pd] + res_16_li)
+
+        # 合并所以结果
+        res_li = [res_pd_1, res_pd_6, res_pd_7, res_pd_8, res_pd_16]
+        res_pd = MyUtils.merge_pd_4_list([khh_pd] + res_li)
+
+        return res_pd
+
+```
+
+
+
+###### get_features_for_model
+
+```python
+import pandas as pd
+import numpy as np
+
+from Get_Features import Getfeatures
+import warnings
+
+warnings.filterwarnings('ignore')
+# os.environb['NUMEXPR_MAX_THREADS']='8'
+
+
+in_data = pd.read_csv("../data/train.csv", sep=',')
+label = in_data['label']
+in_data = in_data.drop(columns='label')
+in_data['partyid_casedate'] = in_data['case_date'] + '_' + in_data['party_id']
+in_data = in_data[['partyid_casedate', 'party_id', 'receive_pay_cd', 'opp_acct_num', 'cnt_amt',
+                   'opp_name', 'amt_val', 'opp_isparty', 'opp_party_class_cd', 'tx_dt', 'dt_time',
+                   'channel', 'cash_trans_flag', 'app_state_cd', 'case_date']]
+in_data['partyid_casedate'] = in_data['partyid_casedate'].astype(str)
+in_data = in_data.replace('(null)', np.nan).replace('\\N', np.nan)
+in_data['amt_val'] = in_data['amt_val'].replace('(null)', np.nan).replace('\\N', np.nan).astype(float)
+in_data['cnt_amt'] = in_data['cnt_amt'].replace('(null)', np.nan).replace('\\N', np.nan).astype(float)
+in_data['receive_pay_cd'] = in_data['receive_pay_cd'].replace(np.nan, -99999).astype(int)
+in_data['opp_isparty'] = in_data['opp_isparty'].replace(np.nan, -99999).astype(int)
+
+khh_list = in_data[['partyid_casedate']].drop_duplicates()
+
+feature_pd = pd.DataFrame()
+
+for i in range(0, len(khh_list), 5000):
+    data = pd.merge(khh_list[i:i + 5000], in_data)
+    feature_pd_s = Getfeatures.get_features_100(data)
+    feature_pd = feature_pd.append(feature_pd_s)
+
+feature_pd.loc[:, 'label'] = label
+feature_pd.to_csv('../data/train_feature.csv', index=False)
+
+```
+
+
+
+###### get_features_for_pre
+
+```python
+import pandas as pd
+import numpy as np
+
+from Get_Features import Getfeatures
+import warnings
+warnings.filterwarnings('ignore')
+# os.environb['NUMEXPR_MAX_THREADS']='8'
+
+
+in_data=pd.read_csv("../data/test.csv")
+in_data['partyid_casedate']=in_data['case_date']+'_'+in_data['party_id']
+in_data=in_data[['partyid_casedate','party_id', 'receive_pay_cd', 'opp_acct_num', 'cnt_amt',
+                'opp_name','amt_val', 'opp_isparty', 'opp_party_class_cd', 'tx_dt', 'dt_time',
+                'channel', 'cash_trans_flag', 'app_state_cd', 'case_date']]
+in_data['partyid_casedate']=in_data['partyid_casedate'].astype(str)
+in_data=in_data.replace('(null)',np.nan).replace('\\N',np.nan)
+in_data['amt_val']=in_data['amt_val'].replace('(null)',np.nan).replace('\\N',np.nan).astype(float)
+in_data['cnt_amt']=in_data['cnt_amt'].replace('(null)',np.nan).replace('\\N',np.nan).astype(float)
+in_data['receive_pay_cd']=in_data['receive_pay_cd'].replace(np.nan,-99999).astype(int)
+in_data['opp_isparty']=in_data['opp_isparty'].replace(np.nan,-99999).astype(int)
+
+
+khh_list=in_data[['partyid_casedate']].drop_duplicates()
+
+feature_pd=pd.DataFrame()
+
+for i in range(0,len(khh_list),10000):
+    data=pd.merge(khh_list[i:i+10000],in_data)
+    feature_pd_s=Getfeatures.get_features_100(data)
+    feature_pd=feature_pd.append(feature_pd_s)
+
+feature_pd.to_csv('../data/test_feature.csv',index=False)
+```
+
+
+
+
 
